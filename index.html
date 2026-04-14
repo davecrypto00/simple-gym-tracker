@@ -1115,7 +1115,13 @@ async function initAuth(){
     }
     if(event==='SIGNED_OUT'){
       supaUser=null;
-      showAuthScreen();
+      // Nie wymuś ekranu auth — app działa dalej w trybie local-only
+      // Odśwież tylko menu żeby pokazać "zaloguj się" zamiast "wyloguj się"
+      drawerReady=false;
+      if(activeTab==='menu'){renderMenuTab();drawerReady=true;}
+      // Ukryj email usera w menu
+      const emailEl=document.getElementById('authUserEmail');
+      if(emailEl)emailEl.textContent='';
     }
   });
 }
@@ -1124,10 +1130,15 @@ async function onSignedIn(user){
   supaUser=user;
   document.getElementById('authScreen').classList.add('hidden');
   drawerReady=false; // refresh menu to show sign out
-  // Load data from Supabase (merge with local)
+  // Load data from Supabase — merge with local (remote wins conflicts, local-only dates pushed up)
   const remoteData=await dbLoadAll();
-  if(Object.keys(remoteData).length>0){
-    localStorage.setItem('td',JSON.stringify(remoteData));
+  const localData=load();
+  // Merge: start with local as base, remote overwrites on same date (cloud = canonical)
+  const merged={...localData,...remoteData};
+  localStorage.setItem('td',JSON.stringify(merged));
+  // Push any local-only dates up to Supabase
+  for(const date of Object.keys(localData)){
+    if(!remoteData[date]) dbSave(date,localData[date]);
   }
   // Boot or refresh
   if(typeof activeTab==='undefined'||!document.getElementById('app').children.length){
@@ -2429,14 +2440,8 @@ document.getElementById('menuBtnSignIn').addEventListener('click',()=>{
 });
 document.getElementById('menuBtnSignOut').addEventListener('click',async()=>{
   await supa.auth.signOut();
-  localStorage.removeItem('td');
-  supaUser=null;
-  showAuthScreen();
-  document.getElementById('authForm').style.display='flex';
-  document.getElementById('authCheck').style.display='none';
-  document.getElementById('authSendBtn').disabled=false;
-  document.getElementById('authSendBtn').textContent='wyślij link';
-  document.getElementById('authEmail').value='';
+  // Dane zostają lokalnie — app działa w trybie offline/local do następnego logowania
+  // supaUser=null i refresh menu obsługuje onAuthStateChange('SIGNED_OUT')
 });
 document.getElementById('menuBtnReOnboardTop').addEventListener('click',()=>{
   localStorage.removeItem('onboarded');
@@ -2496,7 +2501,7 @@ document.getElementById('authEmail').addEventListener('keydown',e=>{
 // sync handled in afterSave()
 
 // ── START ────────────────────────────────────────────────────────────────────
-bootApp(); // auth disabled temporarily
+initAuth(); // auth enabled — magic link via Supabase
 
 </script>
 </body>
