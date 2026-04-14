@@ -653,6 +653,12 @@ body::before{
 .ob-goal-wrap{
   display:flex;align-items:center;gap:20px;margin-bottom:10px;
 }
+.ob-skip-btn{
+  background:none;border:none;color:var(--dm);font-family:inherit;
+  font-size:14px;padding:12px 0;cursor:pointer;text-decoration:underline;
+  -webkit-tap-highlight-color:transparent;width:100%;max-width:340px;
+}
+.ob-skip-btn:active{opacity:.5}
 .ob-step-btn{
   width:52px;height:52px;border-radius:16px;background:var(--sf);
   border:none;color:var(--tx);font-size:26px;cursor:pointer;
@@ -1012,6 +1018,7 @@ body::before{
     <div class="ob-dot" id="obDot1"></div>
     <div class="ob-dot" id="obDot2"></div>
     <div class="ob-dot" id="obDot3"></div>
+    <div class="ob-dot" id="obDot4"></div>
   </div>
 
   <!-- STEP 0: SPLASH -->
@@ -1062,6 +1069,24 @@ body::before{
     <div class="ob-hint" id="obH3"></div>
     <div class="ob-types" id="obTypes"></div>
     <button class="ob-btn" id="obFinish"></button>
+  </div>
+
+  <div class="ob-step" id="obStep4">
+    <div class="ob-step-label" id="obLbl4"></div>
+    <div class="ob-question" id="obQ4"></div>
+    <div class="ob-hint" id="obH4"></div>
+    <div id="obEmailForm" style="width:100%;max-width:340px">
+      <input type="email" class="auth-input" id="obEmailInp" inputmode="email" autocomplete="email"/>
+      <div class="auth-msg" id="obEmailMsg"></div>
+      <button class="ob-btn" id="obSendLink" style="margin-top:8px"></button>
+      <button class="ob-skip-btn" id="obSkip"></button>
+    </div>
+    <div id="obEmailSent" style="display:none;flex-direction:column;align-items:center;gap:12px;text-align:center">
+      <div style="font-size:44px">📬</div>
+      <div class="ob-question" id="obEmailSentTtl"></div>
+      <div class="ob-hint" id="obEmailSentSub"></div>
+      <button class="ob-skip-btn" id="obSkipAfterSend"></button>
+    </div>
   </div>
 
 </div>
@@ -1285,7 +1310,7 @@ function renderMenuTab(){
 // ── TRANSLATIONS ─────────────────────────────────────────────────────────────
 const T={
   pl:{
-    logo:'StatsX',obTitle:'witaj w statsx.',obSub:'Twój osobisty tracker ćwiczeń. Prosto, szybko, bez rozpraszaczy.',obStart:'zacznijmy',obLbl1:'krok 1 z 3',obQ1:'jak masz na imię?',obH1:'Można zmienić później w ustawieniach.',obNext1:'dalej',obLbl2:'krok 2 z 3',obQ2:'ile treningów tygodniowo?',obH2:'Ustawi to Twój miesięczny cel. Możesz zmienić kiedy chcesz.',obGoalUnit:'/ tydzień',obNext2:'dalej',obLbl3:'krok 3 z 3',obQ3:'jaki trening preferujesz?',obH3:'Wybierz jeden lub więcej. Można zmienić później.',obFinish:'zacznijmy!',tabToday:'dziś',tabCal:'kalendarz',tabStats:'statystyki',tabMenu:'menu',workouts:'treningów',logWorkout:'zaloguj trening',logWorkoutSub:'dotknij żeby dodać sesję',active:'aktywnych',missed:'opuszczonych',
+    logo:'StatsX',obTitle:'witaj w statsx.',obSub:'Twój osobisty tracker ćwiczeń. Prosto, szybko, bez rozpraszaczy.',obStart:'zacznijmy',obLbl1:'krok 1 z 3',obQ1:'jak masz na imię?',obH1:'Można zmienić później w ustawieniach.',obNext1:'dalej',obLbl2:'krok 2 z 3',obQ2:'ile treningów tygodniowo?',obH2:'Ustawi to Twój miesięczny cel. Możesz zmienić kiedy chcesz.',obGoalUnit:'/ tydzień',obNext2:'dalej',obLbl3:'krok 3 z 3',obQ3:'jaki trening preferujesz?',obH3:'Wybierz jeden lub więcej. Można zmienić później.',obFinish:'dalej →',obLbl4:'zapisz postępy',obQ4:'chcesz synchronizować trening?',obH4:'Logowanie przez link — bez hasła. Możesz pominąć i zrobić to później w ustawieniach.',obEmailPh:'twoj@email.com',obSendLink:'wyślij link logowania',obSkip:'pomiń, użyj lokalnie',obEmailSentTtl:'sprawdź skrzynkę',obEmailSentSub:'Kliknij link w mailu żeby się zalogować. Możesz teraz zamknąć ten ekran.',obSkipAfterSend:'zamknij i zacznij',tabToday:'dziś',tabCal:'kalendarz',tabStats:'statystyki',tabMenu:'menu',workouts:'treningów',logWorkout:'zaloguj trening',logWorkoutSub:'dotknij żeby dodać sesję',active:'aktywnych',missed:'opuszczonych',
     goal:'miesięczny cel',wtype:'typ treningu',exercises:'ćwiczenia',
     addEx:'+ dodaj ćwiczenie',maxEx:'max 10 ćwiczeń',sets:'serie',reps:'powt.',kg:'kg',
     exPlh:'nazwa ćwiczenia',runStats:'dane biegu',km:'km',hours:'h',minutes:'min',
@@ -1310,7 +1335,7 @@ const T={
       triceps:'Triceps',legs:'Nogi',core:'Brzuch',cardio:'Cardio & Inne'}
   },
   en:{
-    logo:'StatsX',obTitle:'welcome to statsx.',obSub:'Your personal training tracker. Simple, fast, no distractions.',obStart:'lets go',obLbl1:'step 1 of 3',obQ1:'whats your name?',obH1:'You can change this later in settings.',obNext1:'next',obLbl2:'step 2 of 3',obQ2:'workouts per week?',obH2:'This sets your monthly goal. Change anytime.',obGoalUnit:'/ week',obNext2:'next',obLbl3:'step 3 of 3',obQ3:'what do you train most?',obH3:'Pick one or more. Easy to change later.',obFinish:'lets go!',tabToday:'today',tabCal:'calendar',tabStats:'stats',tabMenu:'menu',workouts:'workouts',logWorkout:'log workout',logWorkoutSub:'tap to add session',active:'active',missed:'missed',
+    logo:'StatsX',obTitle:'welcome to statsx.',obSub:'Your personal training tracker. Simple, fast, no distractions.',obStart:'lets go',obLbl1:'step 1 of 3',obQ1:'whats your name?',obH1:'You can change this later in settings.',obNext1:'next',obLbl2:'step 2 of 3',obQ2:'workouts per week?',obH2:'This sets your monthly goal. Change anytime.',obGoalUnit:'/ week',obNext2:'next',obLbl3:'step 3 of 3',obQ3:'what do you train most?',obH3:'Pick one or more. Easy to change later.',obFinish:'next →',obLbl4:'save progress',obQ4:'want to sync your workouts?',obH4:'Sign in via link — no password needed. You can skip and do this later in settings.',obEmailPh:'you@email.com',obSendLink:'send login link',obSkip:'skip, use locally',obEmailSentTtl:'check your inbox',obEmailSentSub:'Click the link in the email to sign in. You can close this screen now.',obSkipAfterSend:'close & start',tabToday:'today',tabCal:'calendar',tabStats:'stats',tabMenu:'menu',workouts:'workouts',logWorkout:'log workout',logWorkoutSub:'tap to add session',active:'active',missed:'missed',
     goal:'monthly goal',wtype:'workout type',exercises:'exercises',
     addEx:'+ add exercise',maxEx:'max 10 exercises',sets:'sets',reps:'reps',kg:'kg',
     exPlh:'exercise name',runStats:'run details',km:'km',hours:'h',minutes:'min',
@@ -2370,7 +2395,39 @@ function initOnboarding(){
   document.getElementById('obStart').addEventListener('click',()=>{haptic();obGoToStep(1);setTimeout(()=>document.getElementById('obNameInp').focus(),400);});
   document.getElementById('obNext1').addEventListener('click',()=>{haptic();obGoToStep(2);});
   document.getElementById('obNext2').addEventListener('click',()=>{haptic();obGoToStep(3);});
-  document.getElementById('obFinish').addEventListener('click',()=>{haptic('success');obComplete();});
+  document.getElementById('obFinish').addEventListener('click',()=>{haptic();obGoToStep(4);setTimeout(()=>document.getElementById('obEmailInp').focus(),400);});
+
+  // step 4 — email/auth
+  const s4=(id,k)=>set$(id,tx(k));
+  s4('obLbl4','obLbl4');s4('obQ4','obQ4');s4('obH4','obH4');s4('obSendLink','obSendLink');s4('obSkip','obSkip');
+  s4('obEmailSentTtl','obEmailSentTtl');s4('obEmailSentSub','obEmailSentSub');s4('obSkipAfterSend','obSkipAfterSend');
+  document.getElementById('obEmailInp').placeholder=tx('obEmailPh');
+
+  document.getElementById('obSendLink').addEventListener('click',async()=>{
+    const email=document.getElementById('obEmailInp').value.trim();
+    if(!email||!email.includes('@')){
+      const msg=document.getElementById('obEmailMsg');
+      msg.textContent=lang==='pl'?'Wpisz poprawny adres email.':'Enter a valid email address.';
+      msg.className='auth-msg error';return;
+    }
+    const btn=document.getElementById('obSendLink');
+    btn.disabled=true;btn.textContent=lang==='pl'?'wysyłanie...':'sending...';
+    // Zapisz dane onboardingu przed wysłaniem linka (po kliknięciu link przeładuje stronę)
+    obCompleteData();
+    const redirectTo=window.location.origin+window.location.pathname;
+    const {error}=await supa.auth.signInWithOtp({email,options:{emailRedirectTo:redirectTo}});
+    if(error){
+      btn.disabled=false;btn.textContent=tx('obSendLink');
+      const msg=document.getElementById('obEmailMsg');
+      msg.textContent='Błąd: '+error.message;msg.className='auth-msg error';
+    } else {
+      document.getElementById('obEmailForm').style.display='none';
+      document.getElementById('obEmailSent').style.display='flex';
+    }
+  });
+
+  document.getElementById('obSkip').addEventListener('click',()=>{haptic();obComplete();});
+  document.getElementById('obSkipAfterSend').addEventListener('click',()=>{haptic();obComplete(true);});
 }
 
 function obGoToStep(next){
@@ -2384,17 +2441,21 @@ function obGoToStep(next){
   },280);
   obStep=next;
   // update dots
-  [0,1,2,3].forEach(i=>{
+  [0,1,2,3,4].forEach(i=>{
     document.getElementById('obDot'+i)?.classList.toggle('on',i===next);
   });
 }
 
-function obComplete(){
+function obCompleteData(){
+  // Zapisuje preferencje z onboardingu do localStorage (bez zamykania ekranu)
   const name=document.getElementById('obNameInp').value.trim();
   if(name){userName=name;localStorage.setItem('uname',name);}
   wGoal=obGoal;localStorage.setItem('wg',obGoal);
   localStorage.setItem('onboarded','1');
-  seedSampleData();
+}
+function obComplete(skipSeed=false){
+  obCompleteData();
+  if(!skipSeed)seedSampleData();
   // animate out
   const ob=document.getElementById('onboarding');
   ob.style.transition='opacity .4s ease, transform .4s ease';
@@ -2459,7 +2520,7 @@ document.getElementById('menuBtnReOnboardTop').addEventListener('click',()=>{
   obStep=0;obGoal=wGoal;obFavTypes=new Set();
   document.querySelectorAll('.ob-step').forEach(s=>s.classList.remove('active','slide-in','slide-out'));
   document.getElementById('obStep0').classList.add('active');
-  [0,1,2,3].forEach(i=>document.getElementById('obDot'+i)?.classList.toggle('on',i===0));
+  [0,1,2,3,4].forEach(i=>document.getElementById('obDot'+i)?.classList.toggle('on',i===0));
   initOnboarding();
 });
 document.getElementById('menuBtnReOnboard').addEventListener('click',()=>{
@@ -2471,7 +2532,7 @@ document.getElementById('menuBtnReOnboard').addEventListener('click',()=>{
   // reset to step 0
   document.querySelectorAll('.ob-step').forEach(s=>s.classList.remove('active','slide-in','slide-out'));
   document.getElementById('obStep0').classList.add('active');
-  [0,1,2,3].forEach(i=>document.getElementById('obDot'+i)?.classList.toggle('on',i===0));
+  [0,1,2,3,4].forEach(i=>document.getElementById('obDot'+i)?.classList.toggle('on',i===0));
   initOnboarding();
 });
 document.getElementById('menuNameSv').addEventListener('click',()=>{
