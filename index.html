@@ -1135,7 +1135,8 @@ async function onSignedIn(user){
   const localData=load();
   // Merge: start with local as base, remote overwrites on same date (cloud = canonical)
   const merged={...localData,...remoteData};
-  localStorage.setItem('td',JSON.stringify(merged));
+  // Zapisz tylko jeśli faktycznie są dane (pusty {} nie powinien nadpisywać stanu nowego usera)
+  if(Object.keys(merged).length>0) localStorage.setItem('td',JSON.stringify(merged));
   // Push any local-only dates up to Supabase
   for(const date of Object.keys(localData)){
     if(!remoteData[date]) dbSave(date,localData[date]);
@@ -2406,7 +2407,7 @@ function obComplete(){
 
 function checkOnboarding(){
   // auto-mark existing users as onboarded (they have data already)
-  if(!localStorage.getItem('onboarded')&&(localStorage.getItem('seeded_v3')||localStorage.getItem('td'))){
+  if(!localStorage.getItem('onboarded')&&(localStorage.getItem('seeded_v3')||Object.keys(load()).length>0)){
     localStorage.setItem('onboarded','1');
   }
   if(localStorage.getItem('onboarded')){
