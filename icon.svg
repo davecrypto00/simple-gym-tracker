@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <rect width="512" height="512" rx="112" fill="#1c1c1e"/>
+  <!-- barbell left side -->
+  <rect x="60" y="220" width="36" height="72" rx="8" fill="#4F7BF7"/>
+  <rect x="84" y="200" width="24" height="112" rx="6" fill="#4F7BF7"/>
+  <!-- bar -->
+  <rect x="108" y="244" width="296" height="24" rx="12" fill="#f5f5f7"/>
+  <!-- barbell right side -->
+  <rect x="392" y="200" width="24" height="112" rx="6" fill="#4F7BF7"/>
+  <rect x="416" y="220" width="36" height="72" rx="8" fill="#4F7BF7"/>
+  <!-- small center circle accent -->
+  <circle cx="256" cy="256" r="22" fill="#2c2c2e"/>
+  <circle cx="256" cy="256" r="14" fill="#4F7BF7" opacity="0.7"/>
+</svg>
