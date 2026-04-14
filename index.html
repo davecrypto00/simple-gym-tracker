@@ -1129,7 +1129,12 @@ async function initAuth(){
 async function onSignedIn(user){
   supaUser=user;
   document.getElementById('authScreen').classList.add('hidden');
+  // Ukryj onboarding jeśli zdążył się pokazać przed rozstrzygnięciem sesji (race condition magic link)
+  const obEl=document.getElementById('onboarding');
+  if(obEl)obEl.classList.add('hidden');
   drawerReady=false; // refresh menu to show sign out
+  // Zalogowany użytkownik = był już onboardowany (może na innym urządzeniu)
+  localStorage.setItem('onboarded','1');
   // Load data from Supabase — merge with local (remote wins conflicts, local-only dates pushed up)
   const remoteData=await dbLoadAll();
   const localData=load();
