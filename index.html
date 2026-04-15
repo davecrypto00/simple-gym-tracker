@@ -1173,8 +1173,8 @@ async function onSignedIn(user){
     const obEl=document.getElementById('onboarding');
     if(obEl)obEl.classList.add('hidden');
   }
-  // Boot or refresh
-  if(typeof activeTab==='undefined'||!document.getElementById('app').children.length){
+  // Boot lub refresh — jeśli bootApp() nie był jeszcze wywołany (np. magic link od razu dał sesję)
+  if(!appBooted){
     bootApp();
   } else {
     renderToday();renderMonth();renderWeek();
@@ -1187,7 +1187,9 @@ function showAuthScreen(){
   document.getElementById('authScreen').classList.remove('hidden');
 }
 
+let appBooted=false;
 function bootApp(){
+  appBooted=true;
   document.getElementById('btnPL').classList.toggle('on',lang==='pl');
   document.getElementById('btnEN').classList.toggle('on',lang==='en');
   applyTheme();
