@@ -597,6 +597,24 @@ body::before{
 
 
 /* ── AUTH SCREEN ─────────────────────────────────────────────────────────── */
+#syncNudge{
+  position:fixed;bottom:calc(max(env(safe-area-inset-bottom),48px) + 12px);left:16px;right:16px;
+  z-index:900;
+  display:flex;align-items:center;justify-content:space-between;gap:10px;
+  background:var(--glass-bg);backdrop-filter:blur(20px) saturate(160%);
+  -webkit-backdrop-filter:blur(20px) saturate(160%);
+  border:1px solid var(--glass-border);border-radius:16px;
+  padding:12px 14px;
+  box-shadow:0 4px 24px var(--glass-shadow);
+  animation:fadeUp .35s ease;
+}
+#syncNudge.hidden{display:none}
+#syncNudge span{font-size:13px;color:var(--tx);line-height:1.4;flex:1}
+#syncNudgeClose{
+  background:none;border:none;color:var(--dm);font-size:16px;
+  cursor:pointer;padding:4px 6px;-webkit-tap-highlight-color:transparent;flex-shrink:0;
+}
+#syncNudgeClose:active{opacity:.5}
 #authScreen{
   position:fixed;inset:0;z-index:1000;
   background:var(--bg);
@@ -881,6 +899,12 @@ body::before{
   </div>
 </div>
 
+<!-- ── SYNC NUDGE ─────────────────────────────────────────────────────────── -->
+<div id="syncNudge" class="hidden">
+  <span id="syncNudgeMsg"></span>
+  <button id="syncNudgeClose" aria-label="zamknij">✕</button>
+</div>
+
 <!-- ── AUTH SCREEN ──────────────────────────────────────────────────────── -->
 <div id="authScreen" class="hidden">
   <div id="authForm" style="width:100%;max-width:320px;display:flex;flex-direction:column;align-items:center">
@@ -997,6 +1021,20 @@ function bootApp(){
   applyTx();renderMonth();renderWeek();
   switchTab('today');
   wireMenuButtons();
+  showSyncNudge();
+}
+
+function showSyncNudge(){
+  if(supaUser)return; // zalogowany — nie pokazuj
+  if(sessionStorage.getItem('nudgeDismissed'))return; // już zamknięty w tej sesji
+  const el=document.getElementById('syncNudge');
+  if(!el)return;
+  set$('syncNudgeMsg',tx('syncNudge'));
+  el.classList.remove('hidden');
+  document.getElementById('syncNudgeClose').onclick=()=>{
+    el.classList.add('hidden');
+    sessionStorage.setItem('nudgeDismissed','1');
+  };
 }
 
 // ── VERSION RESET ─────────────────────────────────────────────────────────────
@@ -1127,7 +1165,7 @@ const T={
     perWeek:'/tyg',
     menu:'menu',greeting:'Witaj',hiName:'Witaj, ',nameHint:'wpisz imię',nameSave:'zapisz',
     streakSec:'seria',changeName:'✎ zmień imię',atlasSec:'atlas ćwiczeń',runSec:'statystyki biegu',
-    dataSec:'dane',settingsSec:'ustawienia',settName:'imię',statsSec:'statystyki treningowe',tplsSec:'moje treningi',savedTpls:'zapisane szablony',recentByType:'ostatni trening wg typu',loadTpl:'wgraj',noTpls:'brak szablonów',signOut:'wyloguj się',signIn:'zaloguj się (sync)',clearData:'usuń wszystkie dane',clearConfirm:'Na pewno usunąć wszystkie dane? Tej operacji nie można cofnąć.',totalRuns:'biegów',totalKm:'km łącznie',avgPace:'śr. tempo',
+    dataSec:'dane',settingsSec:'ustawienia',settName:'imię',statsSec:'statystyki treningowe',tplsSec:'moje treningi',savedTpls:'zapisane szablony',recentByType:'ostatni trening wg typu',loadTpl:'wgraj',noTpls:'brak szablonów',signOut:'wyloguj się',signIn:'zaloguj się (sync)',syncNudge:'Jeśli chcesz zapisać swój progress, zaloguj się w ustawieniach!',clearData:'usuń wszystkie dane',clearConfirm:'Na pewno usunąć wszystkie dane? Tej operacji nie można cofnąć.',totalRuns:'biegów',totalKm:'km łącznie',avgPace:'śr. tempo',
     avgDist:'śr. dystans',lastRuns:'ostatnie biegi',noRuns:'brak zapisanych biegów',
     il:['bardzo lekki','lekki','lekki+','umiarkowany','umiarkowany+','średni','mocny','mocny+','bardzo mocny','maksymalny'],
     months:['styczeń','luty','marzec','kwiecień','maj','czerwiec','lipiec','sierpień','wrzesień','październik','listopad','grudzień'],
@@ -1152,7 +1190,7 @@ const T={
     perWeek:'/wk',
     menu:'menu',greeting:'Hi',hiName:'Hi, ',nameHint:'enter name',nameSave:'save',
     streakSec:'streak',changeName:'✎ change name',atlasSec:'exercise atlas',runSec:'running stats',
-    dataSec:'data',settingsSec:'settings',settName:'name',statsSec:'workout stats',tplsSec:'my workouts',savedTpls:'saved templates',recentByType:'recent by type',loadTpl:'load',noTpls:'no templates yet',signOut:'sign out',signIn:'sign in (sync)',clearData:'delete all data',clearConfirm:'Delete all data? This cannot be undone.',totalRuns:'runs',totalKm:'total km',avgPace:'avg pace',
+    dataSec:'data',settingsSec:'settings',settName:'name',statsSec:'workout stats',tplsSec:'my workouts',savedTpls:'saved templates',recentByType:'recent by type',loadTpl:'load',noTpls:'no templates yet',signOut:'sign out',signIn:'sign in (sync)',syncNudge:'To save your progress, sign in via settings!',clearData:'delete all data',clearConfirm:'Delete all data? This cannot be undone.',totalRuns:'runs',totalKm:'total km',avgPace:'avg pace',
     avgDist:'avg dist',lastRuns:'last runs',noRuns:'no runs logged yet',
     il:['very easy','easy','easy+','moderate','moderate+','medium','hard','hard+','very hard','maximum'],
     months:['january','february','march','april','may','june','july','august','september','october','november','december'],
